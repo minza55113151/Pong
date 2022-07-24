@@ -39,6 +39,13 @@ public class ScoreManager : MonoBehaviour
             return 2;
         return 0;
     }
+    public void ResetScore()
+    {
+        p1ScoreInt = 0;
+        p2ScoreInt = 0;
+        p1Score.text = "0";
+        p2Score.text = "0";
+    }
     [PunRPC]
     public void AddScore(int p)
     {

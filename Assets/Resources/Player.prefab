@@ -118,6 +118,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   minY: -5
   maxY: 5
+  playerID: 0
 --- !u!114 &6053947737942525046
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -21,7 +21,7 @@ public class ScoreWall : MonoBehaviour
     {
         if (collision.gameObject.tag == "Ball")
         {
-            GameManager.instance.HitWall(playerN);
+            PhotonView.Get(GameManager.instance).RPC("HitWall", RpcTarget.All, playerN);
         }
     }
 }

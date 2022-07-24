@@ -42,6 +42,13 @@ MonoBehaviour:
   - AddScore
   - PlayerReady
   - GameOver
+  - HitWall
+  - SyncReady
+  - GetReady
+  - RoundStart
+  - Width
+  - PlayHitSound
+  - PlayTNTSound
   DisableAutoOpenWizard: 1
   ShowSettings: 0
   DevRegionSetOnce: 1

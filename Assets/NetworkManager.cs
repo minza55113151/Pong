@@ -7,15 +7,48 @@ using Photon.Realtime;
 
 public class NetworkManager : MonoBehaviourPunCallbacks
 {
+
+    public static NetworkManager instance;
+
     [SerializeField] private TMP_InputField createInputField;
     [SerializeField] private TMP_InputField joinInputField;
 
+
+    private void Awake()
+    {
+        if (instance == null)
+        {
+            instance = this;
+        }
+        else
+        {
+            Destroy(instance.gameObject);
+            instance = this;
+        }
+        DontDestroyOnLoad(gameObject);
+    }
     private void Start()
     {
         MenuManager.instance.OpenMenu("loading");
         PhotonNetwork.ConnectUsingSettings();
     }
-
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            if (PhotonNetwork.InRoom)
+            {
+                PhotonNetwork.DestroyPlayerObjects(PhotonNetwork.LocalPlayer);
+                PhotonNetwork.LeaveRoom();
+                PhotonNetwork.Disconnect();
+            }
+            else
+            {
+                PhotonNetwork.Disconnect();
+                Application.Quit();
+            }
+        }
+    }
     public override void OnConnectedToMaster()
     {
         PhotonNetwork.JoinLobby();
@@ -29,6 +62,10 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     {
         PhotonNetwork.LoadLevel("Game");
     }
+    public override void OnLeftRoom()
+    {
+        PhotonNetwork.LoadLevel("Menu");
+    }
     public override void OnCreateRoomFailed(short returnCode, string message)
     {
         MenuManager.instance.OpenMenu("createandjoinroom");
@@ -38,7 +75,13 @@ public class NetworkManager : MonoBehaviourPunCallbacks
         MenuManager.instance.OpenMenu("createandjoinroom");
     }
 
-    
+
+    public override void OnMasterClientSwitched(Photon.Realtime.Player newMasterClient)
+    {
+        PhotonNetwork.DestroyPlayerObjects(PhotonNetwork.LocalPlayer);
+        PhotonNetwork.LoadLevel("Game");
+    }
+
     public void CreateRoom()
     {
         if (string.IsNullOrEmpty(createInputField.text))

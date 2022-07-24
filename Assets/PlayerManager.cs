@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
 
-public class PlayerManager : MonoBehaviour
+public class PlayerManager : MonoBehaviourPunCallbacks
 {
     [SerializeField] private GameObject playerPrefab;
-
+    
     void Start()
     {
         if (PhotonNetwork.IsMasterClient)

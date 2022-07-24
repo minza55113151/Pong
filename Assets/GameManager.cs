@@ -16,13 +16,11 @@ public class GameManager : MonoBehaviour
     public bool p2Ready = false;
     private bool isGameStarted = false;
 
-    [SerializeField] private GameObject ballPrefab;
     [SerializeField] private TMP_Text readyText;
     [SerializeField] private TMP_Text nPlayerReadyText;
     [SerializeField] private GameObject readyButton;
     [SerializeField] private TMP_Text winnerText;
 
-    private GameObject ball;
     private PhotonView pv;
 
     private void Awake()
@@ -32,8 +30,22 @@ public class GameManager : MonoBehaviour
 
     }
     private void Start()
-    {   
-        
+    {
+        if (!PhotonNetwork.IsMasterClient)
+        {
+            pv.RPC("GetReady", RpcTarget.MasterClient);   
+        }
+    }
+    [PunRPC]
+    public void GetReady()
+    {
+        pv.RPC("SyncReady", RpcTarget.All, p1Ready, p2Ready);
+    }
+    [PunRPC]
+    public void SyncReady(bool p1Ready, bool p2Ready)
+    {
+        this.p1Ready = p1Ready;
+        this.p2Ready = p2Ready;
     }
     private void Update()
     {
@@ -52,6 +64,7 @@ public class GameManager : MonoBehaviour
     [PunRPC]
     private void GameOver()
     {
+        ScoreManager.instance.ResetScore();
         int winner = ScoreManager.instance.GetWinnerPlayer();
         string text = "Player " + winner.ToString() + " Win!!!";
         winnerText.text = text;
@@ -65,20 +78,28 @@ public class GameManager : MonoBehaviour
     {
         winnerText.text = "";
     }
+    [PunRPC]
     public void HitWall(int p)
     {
-        ball.GetComponent<Ball>().Destroy();
         if (PhotonNetwork.IsMasterClient)
         {
+            BallManager.instance.DestroyAllBall();
             AddScore(p);
 
             if (ScoreManager.instance.GetWinnerPlayer() != 0)
             {
                 pv.RPC("GameOver", RpcTarget.All);
             }
+            else
+            {
+                Invoke("CallRoundStart", 3f);
+            }
         }
-
-        Invoke("RoundStart", 3f);
+        
+    }
+    private void CallRoundStart()
+    {
+        pv.RPC("RoundStart", RpcTarget.All);
     }
     private void AddScore(int p)
     {
@@ -124,12 +145,12 @@ public class GameManager : MonoBehaviour
             p2Ready = !p2Ready;
         }
     }
+    [PunRPC]
     private void RoundStart()
     {
         if (PhotonNetwork.IsMasterClient)
         {
-            ball = PhotonNetwork.Instantiate(ballPrefab.name, Vector3.zero, Quaternion.identity);
-            ball.GetComponent<Ball>().StartGame();
+            BallManager.instance.SpawnBall();
         }
         StartCoroutine(ReadyGo());
     }

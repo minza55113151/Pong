@@ -13,5 +13,5 @@ You have to pong the ball to the enemy and defence ball from enemy.
 
 ![App Screenshot 1](/Screenshot/1.png?raw=true)
 ![App Screenshot 2](/Screenshot/2.png?raw=true)
-![App Screenshot 2](/Screenshot/2.png?raw=true)
+![App Screenshot 2](/Screenshot/3.png?raw=true)
 

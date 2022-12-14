@@ -4,6 +4,10 @@
 This game you will be a board.\
 You have to pong the ball to the enemy and defence ball from enemy.
 
+# Game
+
+- [https://pong-one-psi.vercel.app](https://pong-one-psi.vercel.app)
+
 ## How To Play
 
 - Move your mouse to control the board.

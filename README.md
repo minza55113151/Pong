@@ -4,7 +4,7 @@
 This game you will be a board.\
 You have to pong the ball to the enemy and defence ball from enemy.
 
-# Game
+## Game
 
 - [https://pong-one-psi.vercel.app](https://pong-one-psi.vercel.app)
 
